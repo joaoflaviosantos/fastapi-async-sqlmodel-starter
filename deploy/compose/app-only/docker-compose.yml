@@ -1,4 +1,4 @@
-# docker compose --env-file backend/.env -f deploy/compose/app-only/docker-compose.yml --project-name fastapi-async-sqlmodel-boilerplate-prod up -d
+# docker compose --env-file backend/.env -f deploy/compose/app-only/docker-compose.yml --project-name fastapi-async-sqlmodel-starter-prod up -d
 #
 # Use this when Postgres and Redis are provisioned externally (managed databases):
 #   - Dokploy / Coolify / CapRover / Portainer (add databases in the platform UI)
@@ -23,7 +23,7 @@ services:
       context: ../../../
       dockerfile: backend/Dockerfile
       target: prod
-    image: fastapi-async-sqlmodel-boilerplate-api:latest
+    image: fastapi-async-sqlmodel-starter-api:latest
     env_file:
       - ../../../backend/.env
     command: alembic upgrade head
@@ -39,7 +39,7 @@ services:
       context: ../../../
       dockerfile: backend/Dockerfile
       target: prod
-    image: fastapi-async-sqlmodel-boilerplate-api:latest
+    image: fastapi-async-sqlmodel-starter-api:latest
     restart: always
     env_file:
       - ../../../backend/.env
@@ -65,7 +65,7 @@ services:
       context: ../../../
       dockerfile: backend/Dockerfile
       target: prod
-    image: fastapi-async-sqlmodel-boilerplate-api:latest
+    image: fastapi-async-sqlmodel-starter-api:latest
     restart: unless-stopped
     env_file:
       - ../../../backend/.env
@@ -80,7 +80,7 @@ services:
       context: ../../../
       dockerfile: backend/Dockerfile
       target: prod
-    image: fastapi-async-sqlmodel-boilerplate-api:latest
+    image: fastapi-async-sqlmodel-starter-api:latest
     restart: unless-stopped
     env_file:
       - ../../../backend/.env
@@ -95,7 +95,7 @@ services:
       context: ../../../
       dockerfile: backend/Dockerfile
       target: prod
-    image: fastapi-async-sqlmodel-boilerplate-api:latest
+    image: fastapi-async-sqlmodel-starter-api:latest
     restart: unless-stopped
     env_file:
       - ../../../backend/.env

@@ -1,7 +1,6 @@
-# docker compose --env-file backend/.env -f development/compose/full-stack/docker-compose.yml --project-name fastapi-async-sqlmodel-boilerplate up -d
+# docker compose --env-file backend/.env -f development/compose/full-stack/docker-compose.yml --project-name fastapi-async-sqlmodel-starter up -d
 
 services:
-  
   # ---------------------------------------------------------------------------
   # Infrastructure (with host ports bound for local debugging tools like DBeaver)
   # ---------------------------------------------------------------------------
@@ -17,7 +16,7 @@ services:
       -c "max_wal_size=1GB"
       -c "min_wal_size=80MB"
       -c "checkpoint_timeout=10min"
-    container_name: fastapi-async-sqlmodel-boilerplate-postgres
+    container_name: fastapi-async-sqlmodel-starter-postgres
     restart: unless-stopped
     # Reads POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB from env_file
     env_file:
@@ -27,9 +26,13 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - fastapi_async_sqlmodel_boilerplate_network
+      - fastapi_async_sqlmodel_starter_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:?Set POSTGRES_USER} -d ${POSTGRES_DB:?Set POSTGRES_DB}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:?Set POSTGRES_USER} -d ${POSTGRES_DB:?Set POSTGRES_DB}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -37,7 +40,7 @@ services:
 
   redis:
     image: redis:alpine
-    container_name: fastapi-async-sqlmodel-boilerplate-redis
+    container_name: fastapi-async-sqlmodel-starter-redis
     restart: unless-stopped
     command: redis-server --requirepass ${REDIS_CACHE_PASSWORD:?Set REDIS_CACHE_PASSWORD in backend/.env}
     ports:
@@ -45,7 +48,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - fastapi_async_sqlmodel_boilerplate_network
+      - fastapi_async_sqlmodel_starter_network
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${REDIS_CACHE_PASSWORD}", "ping"]
       interval: 5s
@@ -64,7 +67,7 @@ services:
       context: ../../../
       dockerfile: backend/Dockerfile
       target: dev
-    container_name: fastapi-async-sqlmodel-boilerplate-migrate
+    container_name: fastapi-async-sqlmodel-starter-migrate
     env_file:
       - ../../../backend/.env
     environment:
@@ -76,7 +79,7 @@ services:
     volumes:
       - ../../../backend:/app
     networks:
-      - fastapi_async_sqlmodel_boilerplate_network
+      - fastapi_async_sqlmodel_starter_network
     depends_on:
       postgres:
         condition: service_healthy
@@ -90,7 +93,7 @@ services:
       context: ../../../
       dockerfile: backend/Dockerfile
       target: dev
-    container_name: fastapi-async-sqlmodel-boilerplate-api
+    container_name: fastapi-async-sqlmodel-starter-api
     restart: unless-stopped
     env_file:
       - ../../../backend/.env
@@ -119,9 +122,9 @@ services:
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
-      - ../../../backend:/app  # hot-reload: mounts source code into container
+      - ../../../backend:/app # hot-reload: mounts source code into container
     networks:
-      - fastapi_async_sqlmodel_boilerplate_network
+      - fastapi_async_sqlmodel_starter_network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/health"]
       interval: 10s
@@ -141,7 +144,7 @@ services:
       context: ../../../
       dockerfile: backend/Dockerfile
       target: dev
-    container_name: fastapi-async-sqlmodel-boilerplate-celery-worker
+    container_name: fastapi-async-sqlmodel-starter-celery-worker
     restart: unless-stopped
     env_file:
       - ../../../backend/.env
@@ -160,7 +163,7 @@ services:
     volumes:
       - ../../../backend:/app
     networks:
-      - fastapi_async_sqlmodel_boilerplate_network
+      - fastapi_async_sqlmodel_starter_network
     depends_on:
       postgres:
         condition: service_healthy
@@ -174,7 +177,7 @@ services:
       context: ../../../
       dockerfile: backend/Dockerfile
       target: dev
-    container_name: fastapi-async-sqlmodel-boilerplate-celery-beat
+    container_name: fastapi-async-sqlmodel-starter-celery-beat
     restart: unless-stopped
     env_file:
       - ../../../backend/.env
@@ -193,7 +196,7 @@ services:
     volumes:
       - ../../../backend:/app
     networks:
-      - fastapi_async_sqlmodel_boilerplate_network
+      - fastapi_async_sqlmodel_starter_network
     depends_on:
       postgres:
         condition: service_healthy
@@ -207,7 +210,7 @@ services:
       context: ../../../
       dockerfile: backend/Dockerfile
       target: dev
-    container_name: fastapi-async-sqlmodel-boilerplate-celery-flower
+    container_name: fastapi-async-sqlmodel-starter-celery-flower
     restart: unless-stopped
     env_file:
       - ../../../backend/.env
@@ -229,7 +232,7 @@ services:
     volumes:
       - ../../../backend:/app
     networks:
-      - fastapi_async_sqlmodel_boilerplate_network
+      - fastapi_async_sqlmodel_starter_network
     depends_on:
       redis:
         condition: service_healthy
@@ -239,5 +242,5 @@ volumes:
   redis_data:
 
 networks:
-  fastapi_async_sqlmodel_boilerplate_network:
-    name: fastapi-async-sqlmodel-boilerplate-network
+  fastapi_async_sqlmodel_starter_network:
+    name: fastapi-async-sqlmodel-starter-network

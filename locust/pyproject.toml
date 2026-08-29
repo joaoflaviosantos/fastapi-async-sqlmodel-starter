@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "locust-tests"
 version = "0.1.0"
-description = "Load tests for FastAPI boilerplate using Locust"
+description = "Load tests for the FastAPI starter using Locust"
 authors = ["joaoflaviosantos <joaoflavio.s@hotmail.com>"]
 
 [tool.poetry.dependencies]

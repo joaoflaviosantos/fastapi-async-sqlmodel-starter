@@ -68,7 +68,7 @@ def read_color(prompt: str) -> str:
 
 def print_banner() -> None:
     print_color("YELLOW", "#########################################################################################################################")
-    print_color("YELLOW", "####################################### FastAPI Async SQLModel Boilerplate (Setup) ######################################")
+    print_color("YELLOW", "######################################### FastAPI Async SQLModel Starter (Setup) ########################################")
     print_color("YELLOW", "#########################################################################################################################")
     print_color("GREEN", "Supercharge your FastAPI development. A backend for perfectionists with deadlines and lovers of asynchronous programming.")
 

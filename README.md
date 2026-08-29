@@ -1,11 +1,11 @@
-<h1 align="center">FastAPI Async SQLModel Boilerplate</h1>
+<h1 align="center">FastAPI Async SQLModel Starter</h1>
 
 <p align="center" markdown=1>
   <i>Supercharge your FastAPI development. A backend for perfectionists with deadlines and lovers of asynchronous programming.</i>
 </p>
 
 <p align="center">
-  <a href="https://github.com/joaoflaviosantos/fastapi-async-sqlmodel-boilerplate">
+  <a href="https://github.com/joaoflaviosantos/fastapi-async-sqlmodel-starter">
     <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/80658056/293617785-78ad080b-2416-473a-91cd-0adc33acf027.png" alt="White and blue rocket with FastAPI text on it. A Python logo floating next to the rocket." width="35%" height="auto">
   </a>
 </p>
@@ -38,14 +38,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/joaoflaviosantos/fastapi-async-sqlmodel-boilerplate/actions/workflows/tests.yml">
-      <img src="https://github.com/joaoflaviosantos/fastapi-async-sqlmodel-boilerplate/actions/workflows/tests.yml/badge.svg" alt="Tests">
+  <a href="https://github.com/joaoflaviosantos/fastapi-async-sqlmodel-starter/actions/workflows/tests.yml">
+      <img src="https://github.com/joaoflaviosantos/fastapi-async-sqlmodel-starter/actions/workflows/tests.yml/badge.svg" alt="Tests">
   </a>
 </p>
 
 ## 🔍 Project Overview
 
-This **FastAPI** boilerplate for high-performance APIs is fully async, with **SQLModel**, **Redis**, **Celery**, and **Docker**. It uses a Django-inspired folder layout and **Clean Architecture**: routers handle HTTP, services hold business rules, and repositories talk to the database.
+A production-ready **FastAPI** starter — fully async, with **SQLModel**, **Redis**, **Celery**, and **Docker**. It uses a Django-inspired folder layout and **Clean Architecture**: routers handle HTTP, services hold business rules, and repositories talk to the database.
 
 Tests live next to each feature and run in GitHub Actions. Deploy the way that fits you: Compose, PaaS, or Nginx. An optional **Locust** suite is there for load testing.
 
@@ -133,12 +133,12 @@ From the **root directory**, start PostgreSQL and Redis:
 
 ```bash
 docker compose --env-file backend/.env -f development/compose/infra-only/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate up -d
+  --project-name fastapi-async-sqlmodel-starter up -d
 ```
 
 ```bash
-docker compose --project-name fastapi-async-sqlmodel-boilerplate ps
-docker compose --project-name fastapi-async-sqlmodel-boilerplate down
+docker compose --project-name fastapi-async-sqlmodel-starter ps
+docker compose --project-name fastapi-async-sqlmodel-starter down
 ```
 
 The command uses environment variables from `backend/.env`. Copy `backend/.env.example` first if needed (local defaults use `127.0.0.1`).
@@ -187,15 +187,15 @@ Details: [Testing Guide](docs/testing-guide.md).
 
 | Guide                                                        | Description                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------------- |
+| [Coding Agents](docs/ai-coding-guide.md)                     | `AGENTS.md` and first-party skills for this backend                 |
 | [Development Guide](docs/development-guide.md)               | All local development modes (Docker, native, infra-only)            |
 | [Deployment Guide](docs/deploy-guide.md)                     | Production modes: Caddy (Compose full-stack), PaaS, or Nginx native |
-| [Rate Limit Guide](docs/rate-limit-guide.md)                 | Opt-in Redis limiter, path matching, and `TRUST_PROXY_HEADERS`      |
-| [Testing Guide](docs/testing-guide.md)                       | Unit tests, HTTP tests, coverage gate, mypy, and CI                 |
 | [Database Migration Guide](docs/database-migration-guide.md) | Alembic workflow for schema changes                                 |
 | [Celery Guide](docs/celery-guide.md)                         | Celery worker setup and Windows-specific notes                      |
+| [Testing Guide](docs/testing-guide.md)                       | Unit tests, HTTP tests, coverage gate, mypy, and CI                 |
+| [Rate Limit Guide](docs/rate-limit-guide.md)                 | Opt-in Redis limiter, path matching, and `TRUST_PROXY_HEADERS`      |
 | [Uvicorn Guide](docs/uvicorn-guide.md)                       | Local Uvicorn, Compose, and native Gunicorn workers                 |
 | [Locust Guide](docs/locust-guide.md)                         | Optional load testing with Locust                                   |
-| [Coding Agents](docs/ai-coding-guide.md)                     | `AGENTS.md` and first-party skills for this backend                 |
 
 ## 🌐 Reference Projects
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR=/home/ubuntu/fastapi-async-sqlmodel-boilerplate/backend
+DIR=/home/ubuntu/fastapi-async-sqlmodel-starter/backend
 VENV=$DIR/.venv/bin/activate
 
 cd $DIR

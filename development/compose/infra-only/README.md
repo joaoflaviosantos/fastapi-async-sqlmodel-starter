@@ -17,7 +17,7 @@ From the **repository root**:
 
 ```bash
 docker compose --env-file backend/.env -f development/compose/infra-only/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate up -d
+  --project-name fastapi-async-sqlmodel-starter up -d
 ```
 
 ### 2. Run the backend

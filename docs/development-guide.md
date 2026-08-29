@@ -55,7 +55,7 @@ Start main environment (Postgres, Redis, API):
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate up -d
+  --project-name fastapi-async-sqlmodel-starter up -d
 ```
 
 Run migration:
@@ -63,7 +63,7 @@ Run migration:
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate \
+  --project-name fastapi-async-sqlmodel-starter \
   --profile migrate run --rm migrate
 ```
 
@@ -72,7 +72,7 @@ Start Celery Worker:
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate \
+  --project-name fastapi-async-sqlmodel-starter \
   --profile worker up -d celery_worker
 ```
 
@@ -81,7 +81,7 @@ Start Celery Beat:
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate \
+  --project-name fastapi-async-sqlmodel-starter \
   --profile scheduler up -d celery_beat
 ```
 
@@ -90,7 +90,7 @@ Start Flower (Observability):
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate \
+  --project-name fastapi-async-sqlmodel-starter \
   --profile observability up -d celery_flower
 ```
 
@@ -119,7 +119,7 @@ docker compose --env-file backend/.env \
 
 ```bash
 docker compose --env-file backend/.env -f development/compose/infra-only/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate up -d
+  --project-name fastapi-async-sqlmodel-starter up -d
 ```
 
 Then run the backend. **Option A — Quick start:**

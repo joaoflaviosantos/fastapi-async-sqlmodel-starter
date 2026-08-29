@@ -51,9 +51,9 @@ async def send_welcome_email(self: Any, email: str, username: str) -> dict:
                 # Send the email asynchronously using FastApiMailSender
                 await email_sender.send_to_user(
                     to_email_addr=email,
-                    subject="Welcome to FastAPI Async SQLModel Boilerplate!",
+                    subject="Welcome to FastAPI Async SQLModel Starter!",
                     html_content=f"""<p>Hi {username},</p>
-<p>Welcome to our FastAPI Async SQLModel Boilerplate! We're excited to have you on board. If you have any questions or need assistance, feel free to reach out to our support team.</p>
+<p>Welcome to our FastAPI Async SQLModel Starter! We're excited to have you on board. If you have any questions or need assistance, feel free to reach out to our support team.</p>
 <p>Best regards,<br>The Team</p>""",
                 )
                 logger_worker.info(

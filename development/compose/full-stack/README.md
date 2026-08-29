@@ -39,7 +39,7 @@ Starts PostgreSQL, Redis and the FastAPI API:
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate \
+  --project-name fastapi-async-sqlmodel-starter \
   up -d
 ```
 
@@ -50,7 +50,7 @@ Usually required before using the API with a fresh database:
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate \
+  --project-name fastapi-async-sqlmodel-starter \
   --profile migrate \
   run --rm migrate
 ```
@@ -62,7 +62,7 @@ Use this when you need to process background jobs:
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate \
+  --project-name fastapi-async-sqlmodel-starter \
   --profile worker \
   up -d celery_worker
 ```
@@ -74,7 +74,7 @@ Use this when you need scheduled tasks:
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate \
+  --project-name fastapi-async-sqlmodel-starter \
   --profile scheduler \
   up -d celery_beat
 ```
@@ -86,7 +86,7 @@ Use this only when you want to inspect Celery workers and tasks through the Flow
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate \
+  --project-name fastapi-async-sqlmodel-starter \
   --profile observability \
   up -d celery_flower
 ```
@@ -98,7 +98,7 @@ Starts Celery Worker, Celery Beat and Flower:
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate \
+  --project-name fastapi-async-sqlmodel-starter \
   --profile worker \
   --profile scheduler \
   --profile observability \
@@ -110,7 +110,7 @@ docker compose --env-file backend/.env \
 ```bash
 docker compose --env-file backend/.env \
   -f development/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate \
+  --project-name fastapi-async-sqlmodel-starter \
   stop celery_worker
 ```
 

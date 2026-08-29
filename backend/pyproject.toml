@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "fastapi-async-sqlmodel-boilerplate"
+name = "fastapi-async-sqlmodel-starter"
 version = "0.3.0"
-description = "A fully asynchronous FastAPI boilerplate. Built for extensibility and speed, it incorporates FastAPI, SQLModel, Alembic, PostgreSQL, Redis, Celery and Locust. 🚀"
+description = "A fully asynchronous FastAPI starter. Built for extensibility and speed, it incorporates FastAPI, SQLModel, Alembic, PostgreSQL, Redis, Celery and Locust. 🚀"
 authors = ["joaoflaviosantos <joaoflavio.s@hotmail.com>"]
 license = "MIT"
 readme = "README.md"

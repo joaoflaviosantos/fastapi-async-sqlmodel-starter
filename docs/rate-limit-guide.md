@@ -1,6 +1,6 @@
 # Rate Limit Guide
 
-This boilerplate limits how often a caller may hit a route. Rules live in **PostgreSQL** (per user **tier**). Counters live in **Redis** (fixed time window). Enforcement is an opt-in FastAPI dependency — not a global middleware.
+Rate limiting in this starter controls how often a caller may hit a route. Rules live in **PostgreSQL** (per user **tier**). Counters live in **Redis** (fixed time window). Enforcement is an opt-in FastAPI dependency — not a global middleware.
 
 It is applied on **login** and **refresh** (anonymous callers, keyed by IP), blog **tags**, and the **GET** task routes (`processed`, `pending`, `queue-health`, `/{task_id}`). Other endpoints stay unlimited until you add `Depends(rate_limiter)` yourself. Do not put the limiter on `/health` or `/ready`.
 

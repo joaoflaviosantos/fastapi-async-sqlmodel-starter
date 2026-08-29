@@ -23,7 +23,7 @@ native/
 
 ## Setup
 
-> All paths below assume the project is cloned to `/home/ubuntu/fastapi-async-sqlmodel-boilerplate`. Adjust them to match your server.
+> All paths below assume the project is cloned to `/home/ubuntu/fastapi-async-sqlmodel-starter`. Adjust them to match your server.
 
 ### 1. Install dependencies
 
@@ -35,7 +35,7 @@ sudo apt install nginx supervisor python3-pip python3-venv
 ### 2. Set up the virtual environment and install Python dependencies
 
 ```bash
-cd /home/ubuntu/fastapi-async-sqlmodel-boilerplate/backend
+cd /home/ubuntu/fastapi-async-sqlmodel-starter/backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install poetry==1.7.1
@@ -70,9 +70,9 @@ chmod +x deploy/native/scripts/backend-scheduler
 ### 6. Link Supervisor configs
 
 ```bash
-sudo ln -sf /home/ubuntu/fastapi-async-sqlmodel-boilerplate/deploy/native/supervisor/backend-api.conf /etc/supervisor/conf.d/backend-api.conf
-sudo ln -sf /home/ubuntu/fastapi-async-sqlmodel-boilerplate/deploy/native/supervisor/backend-worker.conf /etc/supervisor/conf.d/backend-worker.conf
-sudo ln -sf /home/ubuntu/fastapi-async-sqlmodel-boilerplate/deploy/native/supervisor/backend-scheduler.conf /etc/supervisor/conf.d/backend-scheduler.conf
+sudo ln -sf /home/ubuntu/fastapi-async-sqlmodel-starter/deploy/native/supervisor/backend-api.conf /etc/supervisor/conf.d/backend-api.conf
+sudo ln -sf /home/ubuntu/fastapi-async-sqlmodel-starter/deploy/native/supervisor/backend-worker.conf /etc/supervisor/conf.d/backend-worker.conf
+sudo ln -sf /home/ubuntu/fastapi-async-sqlmodel-starter/deploy/native/supervisor/backend-scheduler.conf /etc/supervisor/conf.d/backend-scheduler.conf
 
 sudo supervisorctl reread
 sudo supervisorctl update
@@ -85,7 +85,7 @@ sudo supervisorctl start all
 > You must disable the default Nginx site, otherwise your domain will continue to serve the Nginx welcome page instead of the application.
 
 ```bash
-sudo ln -sf /home/ubuntu/fastapi-async-sqlmodel-boilerplate/deploy/native/nginx/nginx.conf /etc/nginx/sites-enabled/fastapi-app
+sudo ln -sf /home/ubuntu/fastapi-async-sqlmodel-starter/deploy/native/nginx/nginx.conf /etc/nginx/sites-enabled/fastapi-app
 sudo rm -f /etc/nginx/sites-enabled/default
 sudo nginx -t
 sudo systemctl reload nginx

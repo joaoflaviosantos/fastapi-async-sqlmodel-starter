@@ -7,19 +7,18 @@ After completing the requirements outlined in the **📋 Prerequisites** section
 > For the opt-in Redis rate limiter and `TRUST_PROXY_HEADERS`, see the [Rate Limit Guide](../docs/rate-limit-guide.md).
 > From the repository root, `python setup.py` is the project CLI (local run, Alembic/tests/Black/mypy, Locust). Deploy stays in the Deployment Guide.
 
-
 ## 🛠️ Installation
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/joaoflaviosantos/fastapi-async-sqlmodel-boilerplate.git
+   git clone https://github.com/joaoflaviosantos/fastapi-async-sqlmodel-starter.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd fastapi-async-sqlmodel-boilerplate/backend
+   cd fastapi-async-sqlmodel-starter/backend
    ```
 
 3. Install dependencies using Poetry:
@@ -74,11 +73,13 @@ For more details on running the backend with Uvicorn, consult the [Uvicorn Guide
 Start the Celery worker:
 
 **Linux / macOS:**
+
 ```bash
 poetry run celery -A src.worker:app worker --loglevel=info
 ```
 
 **Windows** (requires thread pool to prevent asyncio event loop deadlocks):
+
 ```bash
 poetry run celery -A src.worker:app worker --loglevel=info -P threads
 ```
@@ -92,11 +93,13 @@ poetry run celery -A src.worker:app beat --loglevel=info
 Or run both worker and beat together (development only):
 
 **Linux / macOS:**
+
 ```bash
 poetry run celery -A src.worker:app worker --beat --loglevel=info
 ```
 
 **Windows:**
+
 ```bash
 poetry run celery -A src.worker:app worker --beat --loglevel=info -P threads
 ```

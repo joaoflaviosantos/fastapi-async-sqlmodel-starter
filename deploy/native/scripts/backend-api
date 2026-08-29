@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME=backend-api
-DIR=/home/ubuntu/fastapi-async-sqlmodel-boilerplate/backend
+DIR=/home/ubuntu/fastapi-async-sqlmodel-starter/backend
 USER=ubuntu
 GROUP=ubuntu
 WORKERS=1

@@ -112,7 +112,7 @@ EXPECTED_SETTINGS_FIELDS = frozenset(
 
 EXPECTED_CONFIG_SNIPPETS = frozenset(
     {
-        'config("PROJECT_NAME", default="FastAPI Async SQLModel Boilerplate")',
+        'config("PROJECT_NAME", default="FastAPI Async SQLModel Starter")',
         'config("PROJECT_DESCRIPTION", default=None)',
         'config("APP_VERSION", default="0.0.1")',
         'config("LICENSE_NAME", default=None)',

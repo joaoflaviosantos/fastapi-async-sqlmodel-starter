@@ -64,7 +64,7 @@ Start main stack (Postgres, Redis, API, Caddy):
 ```bash
 docker compose --env-file backend/.env \
   -f deploy/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate-prod up -d
+  --project-name fastapi-async-sqlmodel-starter-prod up -d
 ```
 
 Run migration:
@@ -72,7 +72,7 @@ Run migration:
 ```bash
 docker compose --env-file backend/.env \
   -f deploy/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate-prod \
+  --project-name fastapi-async-sqlmodel-starter-prod \
   --profile migrate run --rm migrate
 ```
 
@@ -81,7 +81,7 @@ Start Celery Worker:
 ```bash
 docker compose --env-file backend/.env \
   -f deploy/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate-prod \
+  --project-name fastapi-async-sqlmodel-starter-prod \
   --profile worker up -d celery_worker
 ```
 
@@ -90,7 +90,7 @@ Start Celery Beat:
 ```bash
 docker compose --env-file backend/.env \
   -f deploy/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate-prod \
+  --project-name fastapi-async-sqlmodel-starter-prod \
   --profile scheduler up -d celery_beat
 ```
 
@@ -99,7 +99,7 @@ Start Flower (Observability):
 ```bash
 docker compose --env-file backend/.env \
   -f deploy/compose/full-stack/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate-prod \
+  --project-name fastapi-async-sqlmodel-starter-prod \
   --profile observability up -d celery_flower
 ```
 
@@ -141,7 +141,7 @@ Start main API:
 ```bash
 docker compose --env-file backend/.env \
   -f deploy/compose/app-only/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate-prod up -d api
+  --project-name fastapi-async-sqlmodel-starter-prod up -d api
 ```
 
 Run migration:
@@ -149,7 +149,7 @@ Run migration:
 ```bash
 docker compose --env-file backend/.env \
   -f deploy/compose/app-only/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate-prod \
+  --project-name fastapi-async-sqlmodel-starter-prod \
   --profile migrate run --rm migrate
 ```
 
@@ -158,7 +158,7 @@ Start Celery Worker:
 ```bash
 docker compose --env-file backend/.env \
   -f deploy/compose/app-only/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate-prod \
+  --project-name fastapi-async-sqlmodel-starter-prod \
   --profile worker up -d celery_worker
 ```
 
@@ -167,7 +167,7 @@ Start Celery Beat:
 ```bash
 docker compose --env-file backend/.env \
   -f deploy/compose/app-only/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate-prod \
+  --project-name fastapi-async-sqlmodel-starter-prod \
   --profile scheduler up -d celery_beat
 ```
 
@@ -176,7 +176,7 @@ Start Flower (Observability):
 ```bash
 docker compose --env-file backend/.env \
   -f deploy/compose/app-only/docker-compose.yml \
-  --project-name fastapi-async-sqlmodel-boilerplate-prod \
+  --project-name fastapi-async-sqlmodel-starter-prod \
   --profile observability up -d celery_flower
 ```
 
@@ -226,7 +226,7 @@ deploy/native/
 
 CORS is a **browser** policy (fetch/XHR between origins). Native Android and iOS clients (OkHttp, URLSession), curl, Locust, and other backends **do not** apply `Access-Control-Allow-Origin`. Those clients are authenticated with JWT, not CORS.
 
-This boilerplate is API-first. The default is `CORS_ALLOW_ORIGINS=*` with `CORS_ALLOW_CREDENTIALS=false` — intentional, including for mobile apps.
+This starter takes an API-first approach. The default is `CORS_ALLOW_ORIGINS=*` with `CORS_ALLOW_CREDENTIALS=false` — intentional, including for mobile apps.
 
 Tighten CORS only if a **website** (admin UI, PWA) on another origin calls the API:
 
