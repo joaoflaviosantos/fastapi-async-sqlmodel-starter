@@ -35,6 +35,9 @@
   <a href="https://docs.docker.com/compose/">
       <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff&style=for-the-badge" alt="Docker">
   </a>
+  <a href="https://deepwiki.com/joaoflaviosantos/fastapi-async-sqlmodel-starter">
+      <img src="https://img.shields.io/badge/DeepWiki-1F2937?logo=deepwiki&logoColor=white&style=for-the-badge" alt="DeepWiki">
+  </a>
 </p>
 
 <p align="center">
