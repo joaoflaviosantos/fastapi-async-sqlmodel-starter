@@ -33,6 +33,7 @@ def optional(without_fields: list[str] | None = None) -> Callable[[Model], Model
         def make_field_optional(field: FieldInfo, default: Any = None) -> tuple[Any, FieldInfo]:
             new = deepcopy(field)
             new.default = default
+            new.default_factory = None
             new.annotation = Optional[field.annotation]
             return new.annotation, new
 
