@@ -102,12 +102,13 @@ All tasks in this project use the `@async_task` decorator to support async/await
 
 ```python
 from src._overrides.celery.async_task import async_task
+from src.core.db.session import local_session
 from src.worker import app
 
 @async_task(app, name="my_task_name", bind=True, max_retries=3)
 async def my_task(self, param1: str, param2: str) -> dict:
     # You can use async DB sessions, async Redis, etc.
-    async for db in async_get_db():
+    async with local_session() as db:
         # ... async database operations
         pass
 
@@ -116,12 +117,31 @@ async def my_task(self, param1: str, param2: str) -> dict:
 
 ### How It Works
 
-The `async_task` decorator (in `src/_overrides/celery/async_task.py`) uses `asgiref.sync.AsyncToSync` to bridge async coroutines into Celery's synchronous task execution model. This allows you to:
+The `async_task` decorator (in `src/_overrides/celery/async_task.py`) uses `asyncio.run()` to execute each invocation on a fresh event loop. Cache resources are scoped to that invocation and closed before its loop exits. This allows you to:
 
 - Use `async/await` syntax in your tasks
-- Access the async database session (`async_get_db()`)
+- Open an async database session with `local_session()`
 - Use `redis.asyncio` for Redis operations
 - Call any async library or function
+
+### Redis Cache in Worker Tasks
+
+The API creates its cache client in the lifespan defined in `src/core/setup.py`. A worker does not run that lifespan. Its `on_worker_ready` hook performs a synchronous Redis `PING` using `REDIS_CACHE_URL`, with bounded connection/read timeouts, and closes the temporary client immediately. Connectivity failures are logged without preventing worker startup. This check does not create an asynchronous pool or initialize the cache client used by tasks.
+
+Every `@async_task` invocation opens a `task_cache_context`. Use `get_cache_client()` from `src.core.utils.cache` when accessing the cache in shared API/worker code. Inside a task, the client is created lazily from `REDIS_CACHE_URL`, shared with child coroutines, and closed in `finally`, including failures and retries. Outside a task, the helper returns the API lifespan client. Tasks that never access the cache create no Redis connections.
+
+```python
+from src.core.utils.cache import get_cache_client
+
+async def invalidate_item(item_id: int) -> None:
+    client = get_cache_client()
+    if client is not None:
+        await client.delete(f"example:items:{item_id}")
+```
+
+The cache decorator and SCAN-based invalidation helper also resolve the client through this context. Do not assign a worker client to the process-global `cache.client` or initialize an asynchronous cache pool at worker boot: different task invocations use different event loops, and concurrent worker threads must not share those connections. API lifespan initialization remains responsible for the API's pool.
+
+Cache connection and read/write timeouts are bounded in worker tasks. The cache decorator and pattern invalidation retain their fail-open behavior when Redis is unavailable; direct Redis operations should apply the error policy required by their caller. This resource management concerns application caching, separate from the Celery broker connection.
 
 ## Registered Tasks
 

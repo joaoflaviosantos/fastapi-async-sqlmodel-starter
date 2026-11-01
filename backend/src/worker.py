@@ -4,6 +4,7 @@ import asyncio
 from typing import Any
 
 # Third-Party Dependencies
+import redis
 from sqlalchemy.pool import NullPool
 from celery.signals import (
     celeryd_init,
@@ -142,6 +143,17 @@ def on_worker_ready(sender: Any = None, **kwargs: Any) -> None:
     # NOTE: On Windows, Celery's 'celery@hostname ready.' banner text may not appear
     # in the terminal output due to stdout interleaving from the subprocess shell.
     # This signal is the reliable indicator that the worker is ready to accept tasks.
+    # Check connectivity without creating an async pool in the startup loop.
+    # async_task creates and closes its own cache client in each invocation.
+    try:
+        with redis.from_url(
+            str(settings.REDIS_CACHE_URL), socket_connect_timeout=5, socket_timeout=5
+        ) as client:
+            client.ping()
+        logger_worker.info("Redis cache reachability confirmed at worker boot")
+    except Exception:
+        logger_worker.exception("Redis cache health-check failed at worker boot")
+
     logger_worker.info(f"Worker is READY and accepting tasks: {sender}")
 
 

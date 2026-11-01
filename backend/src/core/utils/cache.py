@@ -1,5 +1,8 @@
 # Built-in Dependencies
-from typing import Any, Callable, Dict, List, Tuple, Union
+from typing import Any, AsyncIterator, Callable, Dict, List, Tuple, Union
+from contextlib import asynccontextmanager
+from contextvars import ContextVar
+from dataclasses import dataclass
 import functools
 import json
 import re
@@ -15,9 +18,53 @@ from src.core.exceptions.cache_exceptions import (
     InvalidRequestError,
 )
 from src.core.logger import logger_redis
+from src.core.config import settings
 
 pool: ConnectionPool | None = None
 client: Redis | None = None
+
+
+@dataclass
+class _TaskCacheState:
+    # Child coroutines inherit this same state so the parent can close the client.
+    client: Redis | None = None
+
+
+_task_cache_state: ContextVar[_TaskCacheState | None] = ContextVar(
+    "worker_task_cache_state", default=None
+)
+
+
+def get_cache_client() -> Redis | None:
+    """Use this task's lazy client, or the API lifespan client outside a task."""
+    state = _task_cache_state.get()
+    if state is None:
+        return client
+    if state.client is None:
+        state.client = Redis.from_url(
+            str(settings.REDIS_CACHE_URL),
+            encoding="utf8",
+            decode_responses=True,
+            socket_connect_timeout=5,
+            socket_timeout=5,
+        )
+    return state.client
+
+
+@asynccontextmanager
+async def task_cache_context() -> AsyncIterator[None]:
+    """Own a cache client for one Celery invocation, never a process-global loop."""
+    state = _TaskCacheState()
+    token = _task_cache_state.set(state)
+    try:
+        yield
+    finally:
+        _task_cache_state.reset(token)
+        if state.client is not None:
+            try:
+                await state.client.aclose()
+            except Exception:
+                logger_redis.exception("Failed to close task Redis cache client.")
 
 
 def _stable_cache_value(value: Any) -> Any:
@@ -77,16 +124,17 @@ def _as_scan_pattern(pattern: str) -> str:
 
 async def _delete_keys_by_pattern(pattern: str) -> None:
     """Delete Redis keys matching ``pattern`` via SCAN. Stop only when the cursor is 0."""
-    if client is None:
+    cache_client = get_cache_client()
+    if cache_client is None:
         logger_redis.warning("Redis cache client is not initialized; skip pattern delete.")
         return
 
     cursor = 0
     while True:
         try:
-            cursor, keys = await client.scan(cursor=cursor, match=pattern, count=100)
+            cursor, keys = await cache_client.scan(cursor=cursor, match=pattern, count=100)
             if keys:
-                await client.delete(*keys)
+                await cache_client.delete(*keys)
             if cursor == 0:
                 break
         except Exception as exc:
@@ -130,17 +178,18 @@ def cache(
 
             formatted_key_prefix = _format_prefix(key_prefix, kwargs)
             cache_key = f"{formatted_key_prefix}:{resource_id}" if resource_id is not None else None
+            cache_client = get_cache_client()
 
             if request.method == "GET":
                 if cache_key is None:
                     raise CacheIdentificationInferenceError
-                if client is None:
+                if cache_client is None:
                     logger_redis.warning(
                         "Redis cache client is not initialized; skipping cache for GET."
                     )
                     return await func(request, *args, **kwargs)
                 try:
-                    cached_data = await client.get(cache_key)
+                    cached_data = await cache_client.get(cache_key)
                     if cached_data:
                         return json.loads(cached_data)
                 except Exception as exc:
@@ -150,24 +199,24 @@ def cache(
                 result = await func(request, *args, **kwargs)
                 try:
                     serialized = json.dumps(jsonable_encoder(result))
-                    await client.set(cache_key, serialized, ex=expiration)
+                    await cache_client.set(cache_key, serialized, ex=expiration)
                 except Exception as exc:
                     logger_redis.exception(f"Redis SETEX failed for '{cache_key}': {exc}")
                 return result
 
             result = await func(request, *args, **kwargs)
-            if client is None:
+            if cache_client is None:
                 logger_redis.warning(
                     "Redis cache client is not initialized; skipping cache invalidation."
                 )
                 return result
             try:
                 if cache_key is not None:
-                    await client.delete(cache_key)
+                    await cache_client.delete(cache_key)
                 if to_invalidate_extra is not None:
                     formatted_extra = _format_extra_data(to_invalidate_extra, kwargs)
                     for extra_prefix, extra_id in formatted_extra.items():
-                        await client.delete(f"{extra_prefix}:{extra_id}")
+                        await cache_client.delete(f"{extra_prefix}:{extra_id}")
                 if pattern_to_invalidate_extra is not None:
                     for pattern in pattern_to_invalidate_extra:
                         formatted_pattern = _format_prefix(pattern, kwargs)

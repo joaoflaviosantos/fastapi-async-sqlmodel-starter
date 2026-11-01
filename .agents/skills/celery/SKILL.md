@@ -39,6 +39,13 @@ async def notify_item_created(self, item_id: UUID) -> dict:
 - Open the DB with `local_session()`, never `async_get_db` (that is a FastAPI dependency).
 - Log with `logger_worker` from `src.core.logger`.
 
+## Cache in tasks
+
+- Use `get_cache_client()` from `src.core.utils.cache` instead of accessing `cache.client` directly.
+- `@async_task` manages the cache client's lifecycle. Do not initialize/close it manually or share it between task invocations.
+
+When changing cache lifecycle behavior, read the [worker cache guide](../../../docs/celery-guide.md#redis-cache-in-worker-tasks).
+
 ## Register
 
 After copying into `apps/`, add the **apps** module to `include=[...]` in `backend/src/worker.py`:
